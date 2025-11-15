@@ -10,7 +10,7 @@ To demonstrate this concept, the project uses TensorFlow ( :heavy_exclamation_ma
 
 ## :mag_right: Dataset Selection
 
-For this project, we use the [Top-10 Clothing Dataset](https://github.com/alexeygrigorev/clothing-dataset-small), a subset of the [Clothing Dataset](https://www.kaggle.com/datasets/agrigorev/clothing-dataset-full) published on Kaggle by [Alexey Grigorev](https://www.linkedin.com/in/agrigorev/). This version contains images from the ten most common clothing categories, addressing the class-imbalance issues present in the full 20-class dataset.
+For this project, we use the [Top-10 Clothing Dataset](https://github.com/alexeygrigorev/clothing-dataset-small), a subset of the [Clothing Dataset](https://www.kaggle.com/datasets/agrigorev/clothing-dataset-full) published on Kaggle by [Alexey Grigorev](https://www.linkedin.com/in/agrigorev/). This version contains images from the ten most common clothing categories, addressing the class-imbalance issues present in the full 20-class dataset. Please create a `data/` folder in the project root and place the downloaded data inside.
 
 ### Features
 
