@@ -2,6 +2,8 @@
 
 Ottawa DTI6302 Machine Learning Opearations End to End project
 
+[![Super-Linter](https://github.com/ZipingLiu-JokerH/ClothSnap/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
 ## :star: Project Overview
 
 This project builds an end-to-end machine learning system that classifies clothing images into predefined categories. With modern households owning large and ever-changing wardrobes, organizing and tracking clothing items can be difficult. A reliable image-based classifier can serve as the first step toward an automated wardrobe-management system, where users simply take a photo and have the item identified and categorized.
