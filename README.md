@@ -2,7 +2,7 @@
 
 Ottawa DTI6302 Machine Learning Opearations End to End project
 
-[![Super-Linter](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILE_NAME>/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![Super-Linter](https://github.com/ZipingLiu-JokerH/ClothSnap/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 ## :star: Project Overview
 
