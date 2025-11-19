@@ -1,4 +1,6 @@
-"""Module providing functionality to build tf.data pipelines."""
+"""
+Module providing functionality to build tf.data pipelines.
+"""
 
 from pathlib import Path
 from typing import Tuple
