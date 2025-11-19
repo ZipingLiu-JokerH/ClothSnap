@@ -88,20 +88,20 @@ def build_datasets(
 
     # Load raw datasets (resize + batching handled here)
     train_ds_raw = _build_raw_dataset(train_dir, img_size, batch_size, shuffle=True)
-    test_ds_raw = _build_raw_dataset(test_dir, img_size, batch_size, shuffle=False)
     val_ds_raw = _build_raw_dataset(val_dir, img_size, batch_size, shuffle=False)
+    test_ds_raw = _build_raw_dataset(test_dir, img_size, batch_size, shuffle=False)
 
     cloth_class_names = train_ds_raw.class_names
 
     # Apply preprocessing
     train_dataset = prepare_train_dataset(train_ds_raw)
-    test_dataset = prepare_test_eval_dataset(test_ds_raw)
     val_dataset = prepare_test_eval_dataset(val_ds_raw)
+    test_dataset = prepare_test_eval_dataset(test_ds_raw)
 
-    return train_dataset, test_dataset,val_dataset, cloth_class_names
+    return train_dataset, val_dataset, test_dataset, cloth_class_names
 
 if __name__ == "__main__":
-    train_ds, test_ds, val_ds, class_names = build_datasets("data")
+    train_ds, val_ds, test_ds, class_names = build_datasets("data")
     print("Classes:", class_names)
 
     for images, labels in train_ds.take(1):
