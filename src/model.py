@@ -7,8 +7,6 @@ from typing import Tuple
 # pylint: disable=E0611
 from tensorflow import keras
 
-
-
 def build_baseline_cnn(
     input_shape: Tuple[int, int, int],
     num_classes: int,
