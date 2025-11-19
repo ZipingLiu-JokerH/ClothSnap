@@ -1,7 +1,9 @@
+"""
+Module providing model architectures for image classification.
+"""
 
 from typing import Tuple
 
-import tensorflow as tf
 # pylint: disable=E0611
 from tensorflow import keras
 
