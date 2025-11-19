@@ -211,3 +211,7 @@ data/
 
 # MacOS
 .DS_Store
+
+# Ignore trained models and their logs
+logs/
+models/

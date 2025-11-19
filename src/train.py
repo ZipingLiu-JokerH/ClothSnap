@@ -1,21 +1,17 @@
-# src/train.py
+""" 
+Train model for image classification using TensorFlow and Keras.
+Using a baseline CNN and transfer learning with MobileNetV2.
+"""
 from pathlib import Path
 from datetime import datetime
 
-import tensorflow as tf
 # pylint: disable=E0611
-# pylint: disable=E0401
 from tensorflow import keras
 
-from data_pipeline import build_datasets
-from model import build_baseline_cnn, build_transfer_model
+from src.data_pipeline import build_datasets
+from src.model import build_baseline_cnn, build_transfer_model
 
-
-def get_run_logdir(base_dir: str = "logs") -> str:
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    return str(Path(base_dir) / f"run_{timestamp}")
-
-
+# pylint: disable=R0914
 def train(
     data_dir: str = "data",
     use_transfer: bool = True,
@@ -23,11 +19,23 @@ def train(
     epochs: int = 10,
     learning_rate: float = 1e-3,
 ):
+    """
+    Train an image classification model.
+    Args:
+        data_dir: Directory containing 'train', 'val', 'test' subdirectories.
+        use_transfer: Whether to use transfer learning (MobileNetV2) or baseline CNN.
+        train_base: Whether to fine-tune the base model in transfer learning.
+        epochs: Number of training epochs.
+        learning_rate: Learning rate for the optimizer.
+    Returns:
+        model: Trained Keras model.
+        history: Training history object.
+        class_names: List of class names.
+    """
     # 1. Build datasets
     train_ds, val_ds, test_ds, class_names = build_datasets(data_dir)
     num_classes = len(class_names)
-    IMG_SIZE = (224, 224)
-    input_shape = (*IMG_SIZE, 3)
+    input_shape = (224, 224, 3)
 
     print("Classes:", class_names)
     print("Input shape:", input_shape)
@@ -50,8 +58,10 @@ def train(
     model.summary()
 
     # 4. Set up callbacks: TensorBoard, EarlyStopping, ModelCheckpoint
-    log_dir = get_run_logdir()
-    checkpoint_dir = Path("models") / "best_model"
+    run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
+    model_name = "transfer" if use_transfer else "baseline_CNN"
+    log_dir = Path("logs") / f"run_{run_id}"
+    checkpoint_dir = Path("models") / f"{model_name}_{run_id}"
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     tensorboard_cb = keras.callbacks.TensorBoard(log_dir=log_dir)
@@ -83,12 +93,19 @@ def train(
 
 
 if __name__ == "__main__":
-    # Example: run with transfer learning
+    # run with transfer learning
     train(
         data_dir="data",
         use_transfer=True,
-        train_base=False,  # later you can try True for fine-tuning
+        train_base=False,  # later could use True for fine-tuning
         epochs=10,
         learning_rate=1e-3,
     )
 
+    # run baseline CNN
+    train(
+        data_dir="data",
+        use_transfer=False,
+        epochs=10,
+        learning_rate=1e-3,
+    )
