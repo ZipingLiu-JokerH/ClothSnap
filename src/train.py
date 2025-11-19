@@ -4,6 +4,7 @@ from datetime import datetime
 
 import tensorflow as tf
 # pylint: disable=E0611
+# pylint: disable=E0401
 from tensorflow import keras
 
 from data_pipeline import build_datasets
