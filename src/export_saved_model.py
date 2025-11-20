@@ -32,7 +32,7 @@ def export(model_path: Path, export_dir: Path) -> None:
     model = keras.models.load_model(model_path)
     export_dir.mkdir(parents=True, exist_ok=True)
 
-    model.save(export_dir, save_format="tf")
+    model.export(export_dir)
 
     with open(export_dir / "labels.json", "w", encoding="utf-8") as f:
         json.dump(CLASS_NAMES, f, indent=2)
