@@ -15,7 +15,7 @@ from typing import Tuple
 
 import numpy as np
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from PIL import Image
 
 # Configuration
@@ -23,6 +23,7 @@ DEFAULT_TF_URL = "http://localhost:8501/v1/models/clothsnap:predict"
 MODEL_DIR = Path("models/tf_serving_ready_model")
 LABELS_PATH = MODEL_DIR / "labels.json"
 INPUT_SIZE: Tuple[int, int] = (224, 224)
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
 # Load labels once
 if LABELS_PATH.exists():
@@ -85,6 +86,12 @@ def predict():
     pred_array = np.array(predictions[0], dtype="float32")
     results = postprocess_predictions(pred_array)
     return jsonify({"results": results}), 200
+
+
+@app.route("/", methods=["GET"])
+def serve_index():
+    """Serve the frontend page."""
+    return send_from_directory(str(FRONTEND_DIR), "index.html")
 
 
 if __name__ == "__main__":
