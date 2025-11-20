@@ -27,3 +27,7 @@ Each image belongs to exactly one category.
 ### Relevance and Significance
 
 This dataset aligns well with the project’s goal of building an image-based clothing classifier that could support a future wardrobe-management system. By focusing on the ten most common clothing categories, the dataset provides enough balanced examples for reliable model training while still reflecting the types of items people frequently own. Its natural variation in lighting and backgrounds makes it practical for a real user scenario where photos may be taken casually at home.
+
+### Export saved keras model to tf serving ready model
+
+`python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras`
