@@ -31,3 +31,8 @@ This dataset aligns well with the project’s goal of building an image-based cl
 ### Export saved keras model to tf serving ready model
 
 `python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras`
+
+### Docker
+
+To start docker `docker compose up -d tf-serving`
+To close docker `docker compose down`
