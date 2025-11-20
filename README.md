@@ -42,4 +42,4 @@ To close docker `docker compose down`
 To start the BE server `python -m src.api`
 To interact with the api open a new terminal
 Health check `curl http://localhost:5001/health`
-Predict image `curl -X POST -F "file=@path/to/image.jpg" http://localhost:5001/predict`
+Predict image `curl -X POST -F "file=@path/to/image.jpg" http://localhost:5001/predict` OR open `http://localhost:5001` in browser and upload images
