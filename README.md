@@ -34,12 +34,12 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 ### Docker
 
-To start docker `docker compose up -d tf-serving`
-To close docker `docker compose down`
+To start Docker `docker compose up -d tf-serving`
+To close Docker `docker compose down`
 
-### Local Flask Backend api
+### Local Flask Backend API
 
 To start the BE server `python -m src.api`
-To interact with the api open a new terminal
+To interact with the API open a new terminal
 Health check `curl http://localhost:5001/health`
 Predict image `curl -X POST -F "file=@path/to/image.jpg" http://localhost:5001/predict` OR open `http://localhost:5001` in browser and upload images

@@ -55,11 +55,13 @@ def postprocess_predictions(preds: np.ndarray, top_k: int = 3):
 
 @app.route("/health", methods=["GET"])
 def health():
+    """Health check endpoint."""
     return jsonify({"status": "ok", "labels_loaded": len(CLASS_NAMES)}), 200
 
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    """Handle prediction requests."""
     if "file" not in request.files:
         return jsonify({"error": "No file part in request"}), 400
     file_storage = request.files["file"]
