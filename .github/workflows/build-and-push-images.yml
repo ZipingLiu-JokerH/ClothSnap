@@ -11,8 +11,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME_FLASK: ${{ github.repository }}-flask
-  IMAGE_NAME_TFSERVING: ${{ github.repository }}-tfserving
+  IMAGE_NAME_FLASK: clothsnap-flask
+  IMAGE_NAME_TFSERVING: clothsnap-tfserving
 
 jobs:
   build-and-push:
