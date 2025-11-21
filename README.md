@@ -36,14 +36,9 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 `python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras --bundle`
 
-### Docker
+### Local end-2-end testing with Docker
 
-To start Docker `docker compose up -d tf-serving`
-To close Docker `docker compose down`
-
-### Local Flask Backend API
-
-To start the BE server `python -m src.api`
-To interact with the API open a new terminal
-Health check `curl http://localhost:5001/health`
-Predict image `curl -X POST -F "file=@path/to/image.jpg" http://localhost:5001/predict` OR open `http://localhost:5001` in browser and upload images
+-   Ensure `models/tf_serving_ready_model` exists (exported locally).
+-   Start both services: `docker compose -f docker-compose.local.yml up --build`
+-   Open `http://localhost:5001` to use the UI; `/health` for checks.
+-   Stop: `docker compose -f docker-compose.local.yml down`

@@ -24,13 +24,25 @@ MODEL_DIR = Path("models/tf_serving_ready_model")
 LABELS_PATH = MODEL_DIR / "labels.json"
 INPUT_SIZE: Tuple[int, int] = (224, 224)
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+DEFAULT_CLASS_NAMES = [
+    "dress",
+    "hat",
+    "longsleeve",
+    "outwear",
+    "pants",
+    "shirt",
+    "shoes",
+    "shorts",
+    "skirt",
+    "t-shirt",
+]
 
 # Load labels once
 if LABELS_PATH.exists():
     with open(LABELS_PATH, "r", encoding="utf-8") as f:
         CLASS_NAMES = json.load(f)
 else:
-    CLASS_NAMES = []
+    CLASS_NAMES = DEFAULT_CLASS_NAMES
 
 app = Flask(__name__)
 
