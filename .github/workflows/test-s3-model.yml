@@ -1,0 +1,59 @@
+name: Test Private S3 Model Access
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-s3-access:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Verify AWS identity (should show your IAM role)
+        run: aws sts get-caller-identity
+
+      - name: Extract bucket + key prefix from MODEL_URL
+        id: parse
+        run: |
+          # Extract bucket name
+          BUCKET=$(echo "${{ vars.MODEL_URL }}" | sed -E 's@https://([^/]+)\..*@\1@')
+          echo "bucket=$BUCKET" >> $GITHUB_OUTPUT
+
+          # Extract key (everything after ".com/")
+          KEY=$(echo "${{ vars.MODEL_URL }}" | sed -E 's@https://[^/]+\.s3[^/]*/@@')
+          echo "key=$KEY" >> $GITHUB_OUTPUT
+
+          # Extract prefix (folder only)
+          PREFIX=$(dirname "$KEY")
+          echo "prefix=$PREFIX" >> $GITHUB_OUTPUT
+
+      - name: Print extracted values
+        run: |
+          echo "Bucket: ${{ steps.parse.outputs.bucket }}"
+          echo "Key:    ${{ steps.parse.outputs.key }}"
+          echo "Prefix: ${{ steps.parse.outputs.prefix }}"
+
+      - name: List contents of the S3 folder
+        run: |
+          aws s3 ls s3://${{ steps.parse.outputs.bucket }}/${{ steps.parse.outputs.prefix }}/
+
+      - name: Download the model file from S3
+        run: |
+          aws s3 cp \
+            s3://${{ steps.parse.outputs.bucket }}/${{ steps.parse.outputs.key }} \
+            ./model.tar.gz
+
+      - name: Verify the downloaded file
+        run: ls -lh ./model.tar.gz
