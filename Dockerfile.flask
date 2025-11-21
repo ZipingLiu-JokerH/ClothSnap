@@ -1,0 +1,28 @@
+# Flask backend + frontend image
+
+FROM python:3.10-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=5001
+
+WORKDIR /app
+
+# System deps for Pillow image handling
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libjpeg62-turbo-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY src/ src/
+COPY frontend/ frontend/
+
+EXPOSE 5001
+
+# CLOTHSNAP_TF_URL should be provided in runtime environment; default stays in code
+CMD ["python", "-m", "src.api"]
