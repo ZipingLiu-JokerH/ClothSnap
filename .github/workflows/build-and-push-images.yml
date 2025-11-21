@@ -30,7 +30,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Download model artifact
-        run: aws s3 cp "${{ vars.MODEL_URL }}" model.tar.gz
+        run: aws s3 cp "${{ vars.MODEL_URI }}" model.tar.gz
 
       - name: Docker login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
