@@ -11,6 +11,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  OWNER: zipingliu-jokerh
   IMAGE_NAME_FLASK: clothsnap-flask
   IMAGE_NAME_TFSERVING: clothsnap-tfserving
 
@@ -28,6 +29,9 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Download model artifact
+        run: aws s3 cp "${{ vars.MODEL_URL }}" model.tar.gz
+
       - name: Docker login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
 
@@ -35,18 +39,18 @@ jobs:
         run: |
           docker build \
             -f Dockerfile.flask \
-            -t $REGISTRY/${IMAGE_NAME_FLASK}:latest \
+            -t $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest \
             .
 
       - name: Build TF Serving image (model baked in)
         run: |
           docker build \
             -f Dockerfile.tfserving \
-            --build-arg MODEL_URL=${{ vars.MODEL_URL }} \
-            -t $REGISTRY/${IMAGE_NAME_TFSERVING}:latest \
+            --build-arg MODEL_TAR=model.tar.gz \
+            -t $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest \
             .
 
       - name: Push images
         run: |
-          docker push $REGISTRY/${IMAGE_NAME_FLASK}:latest
-          docker push $REGISTRY/${IMAGE_NAME_TFSERVING}:latest
+          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest
+          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest
