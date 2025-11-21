@@ -1,19 +1,16 @@
-# TensorFlow Serving image with baked-in model from S3 (MODEL_URL)
+# TensorFlow Serving image with model baked in from a provided tarball in build context.
 FROM tensorflow/serving:latest
 
-ARG MODEL_URL
+ARG MODEL_TAR=model.tar.gz
 ENV MODEL_NAME=clothsnap
 
-RUN test -n "$MODEL_URL" || (echo "MODEL_URL build-arg is required" && false)
+# Copy the model tarball from build context and unpack to /models/clothsnap/1
+COPY ${MODEL_TAR} /tmp/model.tar.gz
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl tar && rm -rf /var/lib/apt/lists/*
-
-# Download and unpack the model tar.gz into /models/clothsnap/1
 RUN mkdir -p /models/${MODEL_NAME}/1 /tmp/model && \
-    curl -L "$MODEL_URL" -o /tmp/model/model.tar.gz && \
-    tar -xzf /tmp/model/model.tar.gz -C /tmp/model && \
+    tar -xzf /tmp/model.tar.gz -C /tmp/model && \
     cp -a /tmp/model/tf_serving_ready_model/. /models/${MODEL_NAME}/1/ && \
-    rm -rf /tmp/model
+    rm -rf /tmp/model /tmp/model.tar.gz
 
 EXPOSE 8501
 
