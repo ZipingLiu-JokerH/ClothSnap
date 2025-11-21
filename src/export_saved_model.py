@@ -66,10 +66,9 @@ def parse_args() -> argparse.Namespace:
         help="Path to the trained .keras model file (e.g., models/transfer_.../model.keras).",
     )
     parser.add_argument(
-        "--bundle-version",
-        type=str,
-        default=None,
-        help="If set, bundle to artifacts/clothsnap_<version>.tar.gz.",
+        "--bundle",
+        action="store_true",
+        help="If set, bundle to artifacts/model.tar.gz.",
     )
     return parser.parse_args()
 
@@ -79,10 +78,9 @@ def main() -> None:
     args = parse_args()
     export_dir = Path("models/tf_serving_ready_model")
     export(args.model_path, export_dir)
-    if args.bundle_version:
-        bundle_path = Path("artifacts") / f"clothsnap_{args.bundle_version}.tar.gz"
+    if args.bundle:
+        bundle_path = Path("artifacts") / "model.tar.gz"
         bundle(bundle_path, export_dir)
-
 
 if __name__ == "__main__":
     main()
