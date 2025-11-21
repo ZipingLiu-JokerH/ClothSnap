@@ -32,6 +32,10 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 `python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras`
 
+### Optionally bundle the model with a specific version stored in /artifacts and ready to upload to S3
+
+`python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras --bundle-version 1`
+
 ### Docker
 
 To start Docker `docker compose up -d tf-serving`
