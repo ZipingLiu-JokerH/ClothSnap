@@ -21,39 +21,41 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Verify AWS identity (should show your IAM role)
+      - name: Verify AWS identity
         run: aws sts get-caller-identity
 
-      - name: Extract bucket + key prefix from MODEL_URL
+      - name: Parse MODEL_URL into bucket and key
         id: parse
         run: |
-          # Extract bucket name
-          BUCKET=$(echo "${{ vars.MODEL_URL }}" | sed -E 's@https://([^/]+)\..*@\1@')
+          URL="${{ vars.MODEL_URL }}"
+
+          # Extract bucket name (everything before ".s3")
+          BUCKET=$(echo "$URL" | sed -E 's@https://([^\.]+)\.s3.*@\1@')
           echo "bucket=$BUCKET" >> $GITHUB_OUTPUT
 
-          # Extract key (everything after ".com/")
-          KEY=$(echo "${{ vars.MODEL_URL }}" | sed -E 's@https://[^/]+\.s3[^/]*/@@')
+          # Extract key (everything after the domain)
+          KEY=$(echo "$URL" | sed -E 's@https://[^/]+\.com/@@')
           echo "key=$KEY" >> $GITHUB_OUTPUT
 
           # Extract prefix (folder only)
           PREFIX=$(dirname "$KEY")
           echo "prefix=$PREFIX" >> $GITHUB_OUTPUT
 
-      - name: Print extracted values
+      - name: Print parsed values
         run: |
           echo "Bucket: ${{ steps.parse.outputs.bucket }}"
           echo "Key:    ${{ steps.parse.outputs.key }}"
           echo "Prefix: ${{ steps.parse.outputs.prefix }}"
 
-      - name: List contents of the S3 folder
+      - name: List S3 folder
         run: |
           aws s3 ls s3://${{ steps.parse.outputs.bucket }}/${{ steps.parse.outputs.prefix }}/
 
-      - name: Download the model file from S3
+      - name: Download model file
         run: |
           aws s3 cp \
             s3://${{ steps.parse.outputs.bucket }}/${{ steps.parse.outputs.key }} \
             ./model.tar.gz
 
-      - name: Verify the downloaded file
+      - name: Verify downloaded file
         run: ls -lh ./model.tar.gz
