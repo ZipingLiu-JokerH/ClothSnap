@@ -27,3 +27,19 @@ Each image belongs to exactly one category.
 ### Relevance and Significance
 
 This dataset aligns well with the project’s goal of building an image-based clothing classifier that could support a future wardrobe-management system. By focusing on the ten most common clothing categories, the dataset provides enough balanced examples for reliable model training while still reflecting the types of items people frequently own. Its natural variation in lighting and backgrounds makes it practical for a real user scenario where photos may be taken casually at home.
+
+### Export saved keras model to tf serving ready model
+
+`python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras`
+
+### Docker
+
+To start Docker `docker compose up -d tf-serving`
+To close Docker `docker compose down`
+
+### Local Flask Backend API
+
+To start the BE server `python -m src.api`
+To interact with the API open a new terminal
+Health check `curl http://localhost:5001/health`
+Predict image `curl -X POST -F "file=@path/to/image.jpg" http://localhost:5001/predict` OR open `http://localhost:5001` in browser and upload images
