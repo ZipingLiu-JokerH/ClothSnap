@@ -1,12 +1,15 @@
 """
 Utility script to convert a trained Keras model into a TensorFlow SavedModel
 ready for TensorFlow Serving. Labels are hardcoded to match the training order.
+
+Optionally bundles the export into a versioned tar.gz under ./artifacts.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import tarfile
 from pathlib import Path
 
 # pylint: disable=E0611
@@ -41,6 +44,16 @@ def export(model_path: Path, export_dir: Path) -> None:
     print(f"Wrote labels.json with {len(CLASS_NAMES)} classes")
 
 
+def bundle(bundle_path: Path, export_dir: Path) -> None:
+    """Tar/gzip the export_dir."""
+    bundle_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with tarfile.open(bundle_path, "w:gz") as tar:
+        tar.add(export_dir, arcname=export_dir.name)
+
+    print(f"Bundled model to {bundle_path}")
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for model export."""
     parser = argparse.ArgumentParser(
@@ -53,10 +66,9 @@ def parse_args() -> argparse.Namespace:
         help="Path to the trained .keras model file (e.g., models/transfer_.../model.keras).",
     )
     parser.add_argument(
-        "--export-dir",
-        type=Path,
-        default=Path("models/tf_serving_ready_model"),
-        help="Directory to write the SavedModel (default: models/tf_serving_ready_model).",
+        "--bundle",
+        action="store_true",
+        help="If set, bundle to artifacts/model.tar.gz.",
     )
     return parser.parse_args()
 
@@ -64,8 +76,11 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Main function to export the model based on command-line arguments."""
     args = parse_args()
-    export(args.model_path, args.export_dir)
-
+    export_dir = Path("models/tf_serving_ready_model")
+    export(args.model_path, export_dir)
+    if args.bundle:
+        bundle_path = Path("artifacts") / "model.tar.gz"
+        bundle(bundle_path, export_dir)
 
 if __name__ == "__main__":
     main()
