@@ -1,121 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClothSnap Predictor</title>
+  <title>ClothSnap - AI Wardrobe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --accent: #38bdf8;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
+      --bg-gradient: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+
+      /* Decorative Colors */
+      --accent-green: #4ade80;
+      --accent-blue: #3b82f6;
+      --accent-yellow: #facc15;
+      --accent-dark: #1e293b;
+
+      --radius-pill: 999px;
+      --radius-card: 24px;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at 20% 20%, #1e293b, #0f172a 50%),
-                  radial-gradient(circle at 80% 0%, #0ea5e9, transparent 25%),
-                  var(--bg);
-      color: var(--text);
-      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      overflow-x: hidden;
     }
-    .card {
+
+    /* --- Navbar (Minimal) --- */
+    nav {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 720px;
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    h1 { margin: 0 0 12px; letter-spacing: 0.3px; }
-    p { margin: 0 0 16px; color: var(--muted); line-height: 1.5; }
-    .upload {
-      border: 1px dashed rgba(255,255,255,0.2);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: border-color 0.2s ease, background 0.2s ease;
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.5px;
     }
-    .upload:hover {
-      border-color: var(--accent);
-      background: rgba(56,189,248,0.05);
-    }
-    input[type="file"] { margin: 12px auto; display: block; color: var(--text); }
-    button {
-      background: linear-gradient(120deg, #38bdf8, #0ea5e9);
-      color: #0b1224;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 18px;
+
+    .nav-link {
+      color: var(--text-main);
+      text-decoration: none;
       font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      font-size: 0.9rem;
     }
-    button:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(14,165,233,0.3); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; transform: none; }
-    .preview { margin-top: 16px; max-width: 100%; border-radius: 12px; }
-    .results { margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.04); border-radius: 10px; }
-    .badge { display: inline-block; margin-right: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(56,189,248,0.18); color: #e0f2fe; }
-    .error { color: #fda4af; }
+
+    /* --- Core Layout --- */
+    .hero-container {
+      text-align: center;
+      max-width: 900px;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    /* --- Mixed Typography Headline (Magic Headline) --- */
+    h1 {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      /* Responsive large font */
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0 0 40px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      /* Gap between elements */
+    }
+
+    /* Text Blocks */
+    .word {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* --- Decorative UI Shapes --- */
+
+    /* 1. Green Circle Arrow */
+    .shape-circle-arrow {
+      width: 0.9em;
+      height: 0.9em;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-15deg);
+      box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+    }
+
+    .shape-circle-arrow svg {
+      width: 50%;
+      height: 50%;
+      color: #064e3b;
+    }
+
+    /* 2. Blue Pill (Toggle Switch) */
+    .shape-toggle {
+      height: 0.8em;
+      width: 1.6em;
+      background-color: var(--accent-blue);
+      border-radius: var(--radius-pill);
+      position: relative;
+      display: inline-block;
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .shape-toggle::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      height: 80%;
+      aspect-ratio: 1;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .shape-toggle:hover::after {
+      transform: translateX(100%);
+    }
+
+    /* 3. Yellow Badge (Icon) */
+    .shape-badge {
+      width: 0.9em;
+      height: 0.9em;
+      background-color: var(--accent-yellow);
+      border-radius: 30%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(10deg);
+    }
+
+    /* --- Upload Interaction Area (Main Button) --- */
+    .upload-wrapper {
+      margin-top: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .btn-main {
+      background-color: var(--text-main);
+      color: white;
+      padding: 18px 36px;
+      border-radius: var(--radius-pill);
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      background-color: #000;
+    }
+
+    .btn-main:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    /* Hide actual file input */
+    #file-input {
+      display: none;
+    }
+
+    /* --- Results Display --- */
+    .results-panel {
+      margin-top: 40px;
+      text-align: left;
+      width: 100%;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+      /* Hidden by default */
+      animation: slideUp 0.4s ease-out;
+    }
+
+    .preview-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 4px solid white;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .tag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 16px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .tag-label {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .tag-score {
+      color: var(--text-sub);
+      font-family: monospace;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile Adaptation */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 3rem;
+        gap: 10px;
+      }
+
+      .shape-circle-arrow,
+      .shape-badge {
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
   </style>
 </head>
-<body>
-  <div class="card">
-    <h1>ClothSnap Predictor</h1>
-    <p>Upload a clothing image to get the top predictions. Uses TensorFlow Serving behind the scenes.</p>
 
-    <form id="upload-form" class="upload">
-      <input type="file" name="file" accept="image/*" required />
-      <button type="submit">Predict</button>
+<body>
+
+  <nav>
+    <div class="logo">clothsnap.</div>
+    <a href="#" class="nav-link">Login</a>
+  </nav>
+
+  <main class="hero-container">
+
+    <h1>
+      <span class="word">Identify</span>
+
+      <div class="shape-circle-arrow">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </div>
+
+      <span class="word">your</span>
+
+      <div class="shape-badge">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="2.5">
+          <path
+            d="M20.38 3.4a2 2 0 0 0-2-1.9h-12.76a2 2 0 0 0-2 1.9l-.62 16.1a2 2 0 0 0 2 2.5h13.8a2 2 0 0 0 2-2.5l-.62-16.1Z" />
+          <path d="M9 3v18" />
+          <path d="M15 3v18" />
+        </svg>
+      </div>
+
+      <br class="mobile-break"> <span class="word">wardrobe</span>
+
+      <div class="shape-toggle"></div>
+    </h1>
+
+    <p
+      style="color: var(--text-sub); font-size: 1.2rem; margin-bottom: 32px; max-width: 600px; margin-left:auto; margin-right:auto;">
+      Upload a photo of your clothing to instantly categorize and organize your digital closet with AI.
+    </p>
+
+    <form id="upload-form" class="upload-wrapper">
+      <input type="file" id="file-input" name="file" accept="image/*" />
+      <button type="button" class="btn-main" onclick="document.getElementById('file-input').click()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+        Upload Photo
+      </button>
+      <button type="submit" id="submit-btn" style="display:none;"></button>
     </form>
 
-    <img id="preview" class="preview" alt="" />
-    <div id="results" class="results"></div>
-  </div>
+    <div id="results-panel" class="results-panel">
+      <img id="preview" class="preview-img" src="" alt="Preview">
+      <div id="prediction-list">
+      </div>
+    </div>
+
+  </main>
 
   <script>
-    const form = document.getElementById("upload-form");
-    const preview = document.getElementById("preview");
-    const results = document.getElementById("results");
-    const fileInput = form.querySelector('input[type="file"]');
+    const fileInput = document.getElementById("file-input");
+    const uploadForm = document.getElementById("upload-form");
+    const resultsPanel = document.getElementById("results-panel");
+    const previewImg = document.getElementById("preview");
+    const predictionList = document.getElementById("prediction-list");
+    const mainBtn = document.querySelector(".btn-main");
+    const mainBtnText = mainBtn.innerHTML;
 
+    // 1. Trigger preview and submission immediately upon file selection
     fileInput.addEventListener("change", () => {
       const file = fileInput.files[0];
-      if (file) preview.src = URL.createObjectURL(file);
+      if (file) {
+        // Show preview
+        previewImg.src = URL.createObjectURL(file);
+        resultsPanel.style.display = "block";
+
+        // Auto-submit form
+        requestAnimationFrame(() => {
+          handleSubmit(file);
+        });
+      }
     });
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const file = fileInput.files[0];
+    // 2. Handle Submission Logic
+    async function handleSubmit(file) {
       if (!file) return;
+
       const data = new FormData();
       data.append("file", file);
-      const btn = form.querySelector("button");
-      btn.disabled = true;
-      results.textContent = "Predicting...";
+
+      // Update button state
+      mainBtn.disabled = true;
+      mainBtn.innerHTML = `<svg class="animate-spin" style="animation:spin 1s linear infinite; width:20px; height:20px;" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-dasharray="30 60"></circle></svg> Analyzing...`;
+      predictionList.innerHTML = "";
 
       try {
         const resp = await fetch("/predict", { method: "POST", body: data });
         const json = await resp.json();
-        if (!resp.ok) throw new Error(json.error || "Request failed");
-        if (!json.results || !json.results.length) throw new Error("No results");
-        results.innerHTML = json.results
-          .map(r => `<span class="badge">${r.label}</span> ${(r.confidence * 100).toFixed(1)}%`)
-          .join("<br>");
+
+        if (!resp.ok) throw new Error(json.error || "Error");
+
+        // Render Results
+        let html = "";
+        json.results.forEach((r, index) => {
+          const isTop = index === 0;
+          const colorStyle = isTop ? "border-color: var(--accent-blue); color: var(--accent-blue);" : "";
+
+          html += `
+                <div class="tag-row" style="${isTop ? 'border: 2px solid var(--accent-blue); background: #eff6ff;' : ''}">
+                    <span class="tag-label" style="${colorStyle}">${r.label}</span>
+                    <span class="tag-score">${(r.confidence * 100).toFixed(1)}%</span>
+                </div>
+                `;
+        });
+        predictionList.innerHTML = html;
+
       } catch (err) {
-        results.innerHTML = `<span class="error">Error: ${err.message}</span>`;
+        // Beautified Error Display
+        predictionList.innerHTML = `
+              <div style="color:#ef4444; background:#fef2f2; padding:16px; border-radius:12px; text-align:center; border:1px solid #fee2e2;">
+                <strong>Connection Failed</strong><br>
+                <span style="font-size:0.9em; opacity:0.8;">${err.message}</span>
+              </div>
+            `;
       } finally {
-        btn.disabled = false;
+        mainBtn.disabled = false;
+        mainBtn.innerHTML = mainBtnText;
       }
-    });
+    }
+
+    // Prevent default form submission
+    uploadForm.addEventListener("submit", (e) => e.preventDefault());
   </script>
+
+  <style>
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </body>
+
 </html>
