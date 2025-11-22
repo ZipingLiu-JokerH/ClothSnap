@@ -2,22 +2,14 @@ version: "3.8"
 
 services:
   tf-serving:
-    build:
-      context: .
-      dockerfile: Dockerfile.tfserving
-      args:
-        MODEL_URL: ${MODEL_URL}
-    image: clothsnap-tfserving:latest
+    image: ghcr.io/zipingliu-jokerh/clothsnap-tfserving:latest
     container_name: clothsnap-tf-serving
     ports:
       - "8501:8501"  # optional to expose publicly; can remove in prod
     restart: unless-stopped
 
   flask:
-    build:
-      context: .
-      dockerfile: Dockerfile.flask
-    image: clothsnap-flask:latest
+    image: ghcr.io/zipingliu-jokerh/clothsnap-flask:latest
     container_name: clothsnap-flask
     environment:
       - CLOTHSNAP_TF_URL=http://tf-serving:8501/v1/models/clothsnap:predict

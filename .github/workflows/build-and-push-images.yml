@@ -1,0 +1,56 @@
+name: Build and Push Images
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  id-token: write       # for AWS OIDC
+  packages: write       # for GHCR push
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: zipingliu-jokerh
+  IMAGE_NAME_FLASK: clothsnap-flask
+  IMAGE_NAME_TFSERVING: clothsnap-tfserving
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.0
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Download model artifact
+        run: aws s3 cp "${{ vars.MODEL_URI }}" model.tar.gz
+
+      - name: Docker login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+
+      - name: Build Flask image
+        run: |
+          docker build \
+            -f Dockerfile.flask \
+            -t $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest \
+            .
+
+      - name: Build TF Serving image (model baked in)
+        run: |
+          docker build \
+            -f Dockerfile.tfserving \
+            --build-arg MODEL_TAR=model.tar.gz \
+            -t $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest \
+            .
+
+      - name: Push images
+        run: |
+          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest
+          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest
