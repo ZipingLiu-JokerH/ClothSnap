@@ -52,6 +52,6 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Local UI/API + TF Serving (no S3): First ensure `models/tf_serving_ready_model` exists (exported locally), then run `docker compose -f docker-compose.local.yml up --build` → open `http://localhost:5001`. To stop the container, run `docker compose -f docker-compose.local.yml down`
 - Tests: use `pytest`; GitHub Actions runs tests on PRs (`.github/workflows/tests.yml`).
 - Lint/format: use Visual Studio Code extensions (pylint, Prettier). CI runs Super-Linter on PRs (`.github/workflows/lint.yml`).
-- CI: builds/pushes images on `main` (see `.github/workflows/build-and-push-images.yml`); model URI provided via repository variables.
+- CI: builds/pushes images on `main` (see `.github/workflows/build-push-images-and-deploy.yml`); model URI provided via repository variables.
 - Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image.
   - For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact. Also update the `MODEL_URI` repository variable on GitHub

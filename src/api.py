@@ -2,8 +2,8 @@
 Flask API for serving predictions via TensorFlow Serving.
 
 Expectations:
-- TF Serving running (see docker-compose) at CLOTHSNAP_TF_URL (default below).
-- Exported model and labels.json at models/tf_serving_ready_model.
+- TF Serving running (see docker-compose) at CLOTHSNAP_TF_URL.
+- Exported model at models/tf_serving_ready_model.
 """
 
 import os
@@ -16,7 +16,6 @@ from flask import Flask, jsonify, request, send_from_directory
 from PIL import Image
 
 # Configuration
-DEFAULT_TF_URL = "http://localhost:8501/v1/models/clothsnap:predict"
 INPUT_SIZE: Tuple[int, int] = (224, 224)
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 CLASS_NAMES = [
@@ -32,7 +31,11 @@ CLASS_NAMES = [
     "t-shirt",
 ]
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder=str(FRONTEND_DIR),
+    static_url_path="",
+)
 
 
 def preprocess_image(file_storage) -> np.ndarray:
@@ -74,7 +77,7 @@ def predict():
         return jsonify({"error": f"Failed to process image: {exc}"}), 400
 
     payload = {"instances": [image_arr.tolist()]}
-    tf_url = os.getenv("CLOTHSNAP_TF_URL", DEFAULT_TF_URL)
+    tf_url = os.getenv("CLOTHSNAP_TF_URL")
 
     try:
         resp = requests.post(tf_url, json=payload, timeout=10)
