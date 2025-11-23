@@ -5,7 +5,7 @@ services:
     image: ghcr.io/zipingliu-jokerh/clothsnap-tfserving:latest
     container_name: clothsnap-tf-serving
     ports:
-      - "8501:8501"  # optional to expose publicly; can remove in prod
+      - "8501:8501" # optional to expose publicly; can remove in prod
     restart: unless-stopped
 
   flask:

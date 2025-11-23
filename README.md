@@ -36,9 +36,9 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 `python src/export_saved_model.py --model-path models/transfer_20251120-144555/model.keras --bundle`
 
-### Local end-2-end testing with Docker
+### Local end-to-end testing with Docker
 
--   Ensure `models/tf_serving_ready_model` exists (exported locally).
--   Start both services: `docker compose -f docker-compose.local.yml up --build`
--   Open `http://localhost:5001` to use the UI; `/health` for checks.
--   Stop: `docker compose -f docker-compose.local.yml down`
+- Ensure `models/tf_serving_ready_model` exists (exported locally).
+- Start both services: `docker compose -f docker-compose.local.yml up --build`
+- Open `http://localhost:5001` to use the UI; `/health` for checks.
+- Stop: `docker compose -f docker-compose.local.yml down`
