@@ -60,7 +60,7 @@ def main() -> None:
     export_dir = Path("models/tf_serving_ready_model")
     export(args.model_path, export_dir)
     if args.bundle:
-        bundle_path = Path("artifacts") / "model.tar.gz"
+        bundle_path = Path("artifacts/model.tar.gz")
         bundle(bundle_path, export_dir)
 
 if __name__ == "__main__":
