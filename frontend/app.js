@@ -38,10 +38,16 @@ async function handleSubmit(file) {
     let html = "";
     json.results.forEach((r, index) => {
       const isTop = index === 0;
-      const colorStyle = isTop ? "border-color: var(--accent-blue); color: var(--accent-blue);" : "";
+      const colorStyle = isTop
+        ? "border-color: var(--accent-blue); color: var(--accent-blue);"
+        : "";
 
       html += `
-        <div class="tag-row" style="${isTop ? 'border: 2px solid var(--accent-blue); background: #eff6ff;' : ''}">
+        <div class="tag-row" style="${
+          isTop
+            ? "border: 2px solid var(--accent-blue); background: #eff6ff;"
+            : ""
+        }">
           <span class="tag-label" style="${colorStyle}">${r.label}</span>
           <span class="tag-score">${(r.confidence * 100).toFixed(1)}%</span>
         </div>

@@ -22,7 +22,7 @@ body {
   min-height: 100vh;
   background: var(--bg-gradient);
   color: var(--text-main);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,7 +112,7 @@ h1 {
 }
 
 .shape-toggle::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 10%;
   left: 10%;

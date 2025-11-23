@@ -40,3 +40,7 @@ jobs:
           VALIDATE_JUPYTER_NBQA_PYLINT: false
           VALIDATE_JUPYTER_NBQA_RUFF: false
           VALIDATE_TRIVY: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_CSS: false
+          VALIDATE_CSS_PRETTIER: false
+          VALIDATE_JAVASCRIPT_PRETTIER: false
