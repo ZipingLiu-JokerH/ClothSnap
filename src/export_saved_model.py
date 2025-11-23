@@ -8,40 +8,21 @@ Optionally bundles the export into a versioned tar.gz under ./artifacts.
 from __future__ import annotations
 
 import argparse
-import json
 import tarfile
 from pathlib import Path
 
 # pylint: disable=E0611
 from tensorflow import keras
 
-# Hardcoded class names in the expected order
-CLASS_NAMES = [
-    "dress",
-    "hat",
-    "longsleeve",
-    "outwear",
-    "pants",
-    "shirt",
-    "shoes",
-    "shorts",
-    "skirt",
-    "t-shirt",
-]
-
 
 def export(model_path: Path, export_dir: Path) -> None:
-    """Load a .keras model and export it as a SavedModel with labels.json."""
+    """Load a .keras model and export it as a SavedModel."""
     model = keras.models.load_model(model_path)
     export_dir.mkdir(parents=True, exist_ok=True)
 
     model.export(export_dir)
 
-    with open(export_dir / "labels.json", "w", encoding="utf-8") as f:
-        json.dump(CLASS_NAMES, f, indent=2)
-
     print(f"Exported SavedModel to {export_dir}")
-    print(f"Wrote labels.json with {len(CLASS_NAMES)} classes")
 
 
 def bundle(bundle_path: Path, export_dir: Path) -> None:

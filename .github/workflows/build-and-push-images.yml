@@ -33,13 +33,13 @@ jobs:
         run: aws s3 cp "${{ vars.MODEL_URI }}" model.tar.gz
 
       - name: Docker login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" -u "${{ github.actor }}" --password-stdin
 
       - name: Build Flask image
         run: |
           docker build \
             -f Dockerfile.flask \
-            -t $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest \
+            -t "$REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest" \
             .
 
       - name: Build TF Serving image (model baked in)
@@ -47,13 +47,13 @@ jobs:
           docker build \
             -f Dockerfile.tfserving \
             --build-arg MODEL_TAR=model.tar.gz \
-            -t $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest \
+            -t "$REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest" \
             .
 
       - name: Push images
         run: |
-          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest
-          docker push $REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest
+          docker push "$REGISTRY/${OWNER}/${IMAGE_NAME_FLASK}:latest"
+          docker push "$REGISTRY/${OWNER}/${IMAGE_NAME_TFSERVING}:latest"
 
       - name: Deploy on EC2 over SSH
         uses: appleboy/ssh-action@v1.0.0
