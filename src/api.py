@@ -6,9 +6,6 @@ Expectations:
 - Exported model and labels.json at models/tf_serving_ready_model.
 """
 
-from __future__ import annotations
-
-import json
 import os
 from pathlib import Path
 from typing import Tuple
