@@ -41,7 +41,7 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint>` writes a TF Serving-ready SavedModel to `models/tf_serving_ready_model`.
 - Bundle model for distribution: add `--bundle` to create `artifacts/model.tar.gz` for uploading to S3.
 - Serving images: CI builds two images (Flask UI/API and TF Serving with baked model) on merges to `main` and pushes to GHCR.
-- Deploy: CI pulls the published images onto aws ec2 instance and start docker compose to host the application.
+- Deploy: CI pulls the published images onto aws ec2 instance and start Docker compose to host the application.
 
 ## :busts_in_silhouette: Developer Guide
 
@@ -51,6 +51,6 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint> [--bundle]`
 - Local UI/API + TF Serving (no S3): First ensure `models/tf_serving_ready_model` exists (exported locally), then run `docker compose -f docker-compose.local.yml up --build` → open `http://localhost:5001`. To stop the container, run `docker compose -f docker-compose.local.yml down`
 - Tests: use `pytest`; GitHub Actions runs tests on PRs (`.github/workflows/tests.yml`).
-- Lint/format: use VS Code extensions (pylint, Prettier). CI runs Super-Linter on PRs (`.github/workflows/lint.yml`).
-- CI: builds/pushes images on `main` (see `.github/workflows/build-and-push-images.yml`); model URI provided via repo variables.
-- Deployment: EC2 pulls the GHCR images and runs docker compose to host the app; the TF Serving model is baked into the image. For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact.
+- Lint/format: use Visual Studio Code extensions (pylint, Prettier). CI runs Super-Linter on PRs (`.github/workflows/lint.yml`).
+- CI: builds/pushes images on `main` (see `.github/workflows/build-and-push-images.yml`); model URI provided via repository variables.
+- Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image. For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact.
