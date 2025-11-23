@@ -53,4 +53,5 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Tests: use `pytest`; GitHub Actions runs tests on PRs (`.github/workflows/tests.yml`).
 - Lint/format: use Visual Studio Code extensions (pylint, Prettier). CI runs Super-Linter on PRs (`.github/workflows/lint.yml`).
 - CI: builds/pushes images on `main` (see `.github/workflows/build-and-push-images.yml`); model URI provided via repository variables.
-- Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image. For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact.
+- Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image.
+  - For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact. Also update the `MODEL_URI` repository variable on GitHub
