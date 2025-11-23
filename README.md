@@ -8,7 +8,7 @@ Ottawa DTI6302 Machine Learning Opearations end-to-end project
 
 This project builds an end-to-end machine learning system that classifies clothing images into predefined categories. With modern households owning large and ever-changing wardrobes, organizing and tracking clothing items can be difficult. A reliable image-based classifier can serve as the first step toward an automated wardrobe-management system, where users simply take a photo and have the item identified and categorized.
 
-To demonstrate this concept, the project uses TensorFlow ( :heavy_exclamation_mark: todo [include other tech stack used] ) to train a clothing-classification model and integrates it into a simple web application that provides immediate predictions for user-uploaded images.
+To demonstrate this concept, the project uses TensorFlow to train a clothing-classification model and integrates it into a simple web application that provides immediate predictions for user-uploaded images.
 
 ## :mag_right: Dataset Selection
 
