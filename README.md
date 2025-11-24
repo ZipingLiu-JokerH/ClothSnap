@@ -55,3 +55,10 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - CI: builds/pushes images on `main` (see `.github/workflows/build-push-images-and-deploy.yml`); model URI provided via repository variables.
 - Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image.
   - For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact. Also update the `MODEL_URI` repository variable on GitHub
+
+### Docker files overview
+
+- `docker-compose.yml`: production-style stack; pulls published GHCR images, exposes Flask on host port 80, keeps TF Serving internal. This is being used in aws ec2 instanse to start the application.
+- `docker-compose.local.yml`: local dev stack; builds Flask and uses the official TF Serving image with local `models/tf_serving_ready_model` mounted.
+- `Dockerfile.flask`: builds the Flask API/UI image on Python 3.10, installs `requirements.txt`, copies `src/` and `frontend/`, runs `python -m src.api`.
+- `Dockerfile.tfserving`: builds the TF Serving image by unpacking `model.tar.gz` (downloaded from S3 in CI).

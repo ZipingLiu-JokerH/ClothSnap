@@ -15,5 +15,5 @@ services:
     depends_on:
       - tf-serving
     ports:
-      - "5001:5001"
+      - "80:5001"
     restart: unless-stopped
