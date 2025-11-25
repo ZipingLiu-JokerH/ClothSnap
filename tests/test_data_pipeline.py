@@ -1,21 +1,24 @@
-"""Unit tests for data pipeline functions."""
+'''Unit tests for data pipeline functions.'''
+
 import tensorflow as tf
 
-from src.data_pipeline import prepare_train_dataset
+from src.data_pipeline import normalize_image
 
-def test_prepare_train_dataset():
-    """Test that prepare_train_dataset normalizes images to [0, 1]."""
-    images = tf.ones((2, 224, 224, 3), dtype=tf.uint8) * 255
-    labels = tf.constant([0, 1])
-    ds = tf.data.Dataset.from_tensor_slices((images, labels)).batch(2)
 
-    prepped = prepare_train_dataset(ds)
-    batch_images, batch_labels = next(iter(prepped))
+def test_normalize_image_scales_to_zero_one():
+    """Test that normalize_image scales pixel values to [0, 1]."""
+    # Create a tiny fake "image" with known pixel values
+    image = tf.constant([[0, 128, 255]], dtype=tf.uint8)
 
-    min_val = tf.reduce_min(batch_images).numpy()
-    max_val = tf.reduce_max(batch_images).numpy()
+    normalized = normalize_image(image)
 
-    assert batch_images.shape[0] == 2
-    assert batch_labels.shape[0] == 2
-    assert min_val >= 0.0 - 1e-6
-    assert max_val <= 1.0 + 1e-6
+    # Convert to numpy for easier comparison
+    arr = normalized.numpy()
+
+    # Check that all values are between 0 and 1, inclusive
+    assert arr.min() >= 0.0
+    assert arr.max() <= 1.0
+
+    # Optional: check specific scaling for sanity
+    assert arr[0, 0] == 0.0          # 0 / 255
+    assert arr[0, 2] == 1.0          # 255 / 255
