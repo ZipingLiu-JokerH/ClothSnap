@@ -9,14 +9,6 @@ import tensorflow as tf
 # pylint: disable=E0611
 from tensorflow import keras
 
-def normalize_image(image: tf.Tensor) -> tf.Tensor:
-    """
-    Convert an image tensor to float32 and scale pixel values to [0, 1].
-    This will be reused later in the real input pipeline.
-    """
-    image = tf.cast(image, tf.float32)
-    return image / 255.0
-
 
 AUTOTUNE = tf.data.AUTOTUNE
 
