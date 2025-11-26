@@ -47,7 +47,9 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 - Prereqs: Python 3.10, Docker + docker-compose, AWS CLI (for S3), GHCR read access.
 - Install deps: `pip install -r requirements.txt`
+- Dataset: Download the dataset described in dataset selection
 - Train: `python src/train.py`. Checkpoints go to `models/`.
+- Training logs: Utilized tensorboard to view experiment results. `tensorboard --logdir logs`
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint> [--bundle]`
 - Local UI/API + TF Serving (no S3): First ensure `models/tf_serving_ready_model` exists (exported locally), then run `docker compose -f docker-compose.local.yml up --build` → open `http://localhost:5001`. To stop the container, run `docker compose -f docker-compose.local.yml down`
 - Tests: use `pytest`; GitHub Actions runs tests on PRs (`.github/workflows/tests.yml`).

@@ -7,12 +7,13 @@ Expectations:
 """
 
 import os
+import json
 from pathlib import Path
 from typing import Tuple
 
 import numpy as np
 import requests
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, current_app
 from PIL import Image
 
 # Configuration
@@ -90,6 +91,13 @@ def predict():
 
     pred_array = np.array(predictions[0], dtype="float32")
     results = postprocess_predictions(pred_array)
+
+    log_record = {
+        "event": "prediction_top3",
+        "predictions": results,
+    }
+    current_app.logger.info("PREDICTION_EVENT %s", json.dumps(log_record))
+
     return jsonify({"results": results}), 200
 
 
