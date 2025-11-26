@@ -92,11 +92,12 @@ def predict():
     pred_array = np.array(predictions[0], dtype="float32")
     results = postprocess_predictions(pred_array)
 
-    log_record = {
-        "event": "prediction_top3",
-        "predictions": results,
+    confidence_record = {
+        "event": "top_one_confidence",
+        "confidence": results[0]["confidence"],
+        "label": results[0]["label"],
     }
-    current_app.logger.info("PREDICTION_EVENT %s", json.dumps(log_record))
+    current_app.logger.info(json.dumps(confidence_record))
 
     return jsonify({"results": results}), 200
 
