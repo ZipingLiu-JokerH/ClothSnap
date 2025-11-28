@@ -37,7 +37,6 @@ def build_baseline_cnn(
 def build_transfer_model(
     input_shape: Tuple[int, int, int],
     num_classes: int,
-    train_base: bool = False,
 ) -> keras.Model:
     """
     Transfer learning model using MobileNetV2 as a feature extractor.
@@ -47,8 +46,8 @@ def build_transfer_model(
         include_top=False,
         weights="imagenet",
     )
-
-    base_model.trainable = train_base  # False for feature extraction, True for fine-tuning
+    # freeze the weights of MobileNetV2
+    base_model.trainable = False
 
     inputs = keras.Input(shape=input_shape, name="input_image")
 
