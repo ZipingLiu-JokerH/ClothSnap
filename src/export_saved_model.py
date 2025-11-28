@@ -54,14 +54,10 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    """Main function to export the model based on command-line arguments."""
+if __name__ == "__main__":
     args = parse_args()
     export_dir = Path("models/tf_serving_ready_model")
     export(args.model_path, export_dir)
     if args.bundle:
         bundle_path = Path("artifacts/model.tar.gz")
         bundle(bundle_path, export_dir)
-
-if __name__ == "__main__":
-    main()

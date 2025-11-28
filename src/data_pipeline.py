@@ -42,7 +42,6 @@ def prepare_train_dataset(ds: tf.data.Dataset) -> tf.data.Dataset:
     """
     Apply data augmentation and normalization to training dataset.
     """
-
     ds = ds.map(
         lambda x, y: (data_augmentation_layer(normalization_layer(x)), y),
         num_parallel_calls=AUTOTUNE,
@@ -55,7 +54,6 @@ def prepare_test_eval_dataset(ds: tf.data.Dataset) -> tf.data.Dataset:
     """
     Apply only normalization to test and evaluation dataset.
     """
-
     ds = ds.map(
         lambda x, y: (normalization_layer(x), y),
         num_parallel_calls=AUTOTUNE,
@@ -72,7 +70,6 @@ def build_datasets(
     """
     Build train/val/test datasets without relying on global variables.
     """
-
     data_dir = Path(data_dir)
     train_dir = data_dir / "train"
     test_dir = data_dir / "test"
@@ -92,6 +89,7 @@ def build_datasets(
 
     return train_dataset, val_dataset, test_dataset, cloth_class_names
 
+# run directly for a quick test that data pipeline is working
 if __name__ == "__main__":
     train_ds, val_ds, test_ds, class_names = build_datasets("data")
     print("Classes:", class_names)
