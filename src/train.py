@@ -15,7 +15,6 @@ from src.model import build_baseline_cnn, build_transfer_model
 def train(
     data_dir: str = "data",
     use_transfer: bool = True,
-    train_base: bool = False,
     epochs: int = 10,
     learning_rate: float = 1e-3,
 ):
@@ -24,7 +23,6 @@ def train(
     Args:
         data_dir: Directory containing 'train', 'val', 'test' subdirectories.
         use_transfer: Whether to use transfer learning (MobileNetV2) or baseline CNN.
-        train_base: Whether to fine-tune the base model in transfer learning.
         epochs: Number of training epochs.
         learning_rate: Learning rate for the optimizer.
     Returns:
@@ -43,7 +41,7 @@ def train(
     # 2. Build model (baseline CNN or transfer learning)
     if use_transfer:
         print("Using transfer learning model (MobileNetV2)")
-        model = build_transfer_model(input_shape, num_classes, train_base=train_base)
+        model = build_transfer_model(input_shape, num_classes)
     else:
         print("Using baseline CNN model")
         model = build_baseline_cnn(input_shape, num_classes)
@@ -93,11 +91,10 @@ def train(
 
 
 if __name__ == "__main__":
-    # run with transfer learning
+    # run with transfer learning with MobileNetV2
     train(
         data_dir="data",
         use_transfer=True,
-        train_base=False,  # later could use True for fine-tuning
         epochs=10,
         learning_rate=1e-3,
     )
