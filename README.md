@@ -30,9 +30,9 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 ## :gear: Model Training and Pipeline
 
-- Framework: TensorFlow/Keras with two architectures: a baseline CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
+- Framework: TensorFlow/Keras with two architectures: a self build CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
 - Data pipeline (`src/data_pipeline.py`): reads `data/train`, `data/validation`, `data/test`, resizes to 224x224, normalizes to [0,1]; applies light augmentation (flip/rotate/zoom) on training only.
-- Training (`src/train.py`): builds datasets, chooses baseline vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint. Default uses transfer learning with the base frozen (`train_base=False`).
+- Training (`src/train.py`): builds datasets, chooses self build CNN vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint. Default uses transfer learning with the base frozen (`train_base=False`).
 - Outputs: best `.keras` checkpoint under `models/`, and optional TensorFlow SavedModel export via `src/export_saved_model.py` for TensorFlow Serving.
 
 ## :hammer_and_wrench: Model Development Flow
