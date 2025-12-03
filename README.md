@@ -30,14 +30,14 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 ## :gear: Model Training and Pipeline
 
-- Framework: TensorFlow/Keras with two architectures: a baseline CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
+- Framework: TensorFlow/Keras with two architectures: a self build CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
 - Data pipeline (`src/data_pipeline.py`): reads `data/train`, `data/validation`, `data/test`, resizes to 224x224, normalizes to [0,1]; applies light augmentation (flip/rotate/zoom) on training only.
-- Training (`src/train.py`): builds datasets, chooses baseline vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint. Default uses transfer learning with the base frozen (`train_base=False`).
+- Training (`src/train.py`): builds datasets, chooses self build CNN vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint.
 - Outputs: best `.keras` checkpoint under `models/`, and optional TensorFlow SavedModel export via `src/export_saved_model.py` for TensorFlow Serving.
 
 ## :hammer_and_wrench: Model Development Flow
 
-- Train locally: run `python src/train.py` to produce `.keras` checkpoints under `models/`.
+- Train locally: run `python -m src.train` to produce `.keras` checkpoints under `models/`.
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint>` writes a TF Serving-ready SavedModel to `models/tf_serving_ready_model`.
 - Bundle model for distribution: add `--bundle` to create `artifacts/model.tar.gz` for uploading to S3.
 - Serving images: CI builds two images (Flask UI/API and TF Serving with baked model) on merges to `main` and pushes to GHCR.
@@ -45,10 +45,10 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 ## :busts_in_silhouette: Developer Guide
 
-- Prereqs: Python 3.10, Docker + docker-compose, AWS CLI (for S3), GHCR read access.
+- Prereqs: Python 3.10, Docker + docker-compose, AWS S3 EC2, GHCR read access.
 - Install deps: `pip install -r requirements.txt`
 - Dataset: Download the dataset described in dataset selection
-- Train: `python src/train.py`. Checkpoints go to `models/`.
+- Train: `python -m src.train`. Checkpoints go to `models/`.
 - Training logs: Utilized tensorboard to view experiment results. `tensorboard --logdir logs`
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint> [--bundle]`
 - Local UI/API + TF Serving (no S3): First ensure `models/tf_serving_ready_model` exists (exported locally), then run `docker compose -f docker-compose.local.yml up --build` → open `http://localhost:5001`. To stop the container, run `docker compose -f docker-compose.local.yml down`

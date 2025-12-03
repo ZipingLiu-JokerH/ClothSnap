@@ -1,6 +1,6 @@
 """ 
 Train model for image classification using TensorFlow and Keras.
-Using a baseline CNN and transfer learning with MobileNetV2.
+Using selfbuild CNN and transfer learning with MobileNetV2.
 """
 from pathlib import Path
 from datetime import datetime
@@ -9,7 +9,7 @@ from datetime import datetime
 from tensorflow import keras
 
 from src.data_pipeline import build_datasets
-from src.model import build_baseline_cnn, build_transfer_model
+from src.model import build_cnn, build_transfer_model
 
 # pylint: disable=R0914
 def train(
@@ -22,7 +22,7 @@ def train(
     Train an image classification model.
     Args:
         data_dir: Directory containing 'train', 'val', 'test' subdirectories.
-        use_transfer: Whether to use transfer learning (MobileNetV2) or baseline CNN.
+        use_transfer: Whether to use transfer learning (MobileNetV2) or selfbuild CNN.
         epochs: Number of training epochs.
         learning_rate: Learning rate for the optimizer.
     Returns:
@@ -38,13 +38,13 @@ def train(
     print("Classes:", class_names)
     print("Input shape:", input_shape)
 
-    # 2. Build model (baseline CNN or transfer learning)
+    # 2. Build model (CNN or transfer learning)
     if use_transfer:
         print("Using transfer learning model (MobileNetV2)")
         model = build_transfer_model(input_shape, num_classes)
     else:
-        print("Using baseline CNN model")
-        model = build_baseline_cnn(input_shape, num_classes)
+        print("Using CNN model")
+        model = build_cnn(input_shape, num_classes)
 
     # 3. Compile model
     model.compile(
@@ -57,7 +57,7 @@ def train(
 
     # 4. Set up callbacks: TensorBoard, EarlyStopping, ModelCheckpoint
     run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
-    model_name = "transfer" if use_transfer else "baseline_CNN"
+    model_name = "transfer" if use_transfer else "CNN"
     log_dir = Path("logs") / f"run_{run_id}"
     checkpoint_dir = Path("models") / f"{model_name}_{run_id}"
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         learning_rate=1e-3,
     )
 
-    # run baseline CNN
+    # run selfbuild CNN
     train(
         data_dir="data",
         use_transfer=False,
