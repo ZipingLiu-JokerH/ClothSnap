@@ -1,6 +1,6 @@
 # ClothSnap
 
-Ottawa DTI6302 Machine Learning Opearations end-to-end project
+Ottawa DTI6302 Machine Learning Operations end-to-end project. Live application at [ClothSnap](http://13.222.9.82/)
 
 [![Super-Linter](https://github.com/ZipingLiu-JokerH/ClothSnap/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
@@ -30,9 +30,9 @@ This dataset aligns well with the project’s goal of building an image-based cl
 
 ## :gear: Model Training and Pipeline
 
-- Framework: TensorFlow/Keras with two architectures: a self build CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
+- Framework: TensorFlow/Keras with two architectures: a self-built CNN and a transfer model (MobileNetV2) using 224x224x3 inputs.
 - Data pipeline (`src/data_pipeline.py`): reads `data/train`, `data/validation`, `data/test`, resizes to 224x224, normalizes to [0,1]; applies light augmentation (flip/rotate/zoom) on training only.
-- Training (`src/train.py`): builds datasets, chooses self build CNN vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint.
+- Training (`src/train.py`): builds datasets, chooses self-build CNN vs transfer (`use_transfer`), compiles with Adam + SparseCategoricalCrossentropy, trains with TensorBoard logging, EarlyStopping, and ModelCheckpoint saving the best `.keras` checkpoint.
 - Outputs: best `.keras` checkpoint under `models/`, and optional TensorFlow SavedModel export via `src/export_saved_model.py` for TensorFlow Serving.
 
 ## :hammer_and_wrench: Model Development Flow
@@ -41,7 +41,7 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Export for serving: `python src/export_saved_model.py --model-path <your_checkpoint>` writes a TF Serving-ready SavedModel to `models/tf_serving_ready_model`.
 - Bundle model for distribution: add `--bundle` to create `artifacts/model.tar.gz` for uploading to S3.
 - Serving images: CI builds two images (Flask UI/API and TF Serving with baked model) on merges to `main` and pushes to GHCR.
-- Deploy: CI pulls the published images onto aws ec2 instance and start Docker compose to host the application.
+- Deploy: CI pulls the published images onto AWS EC2 instance and start Docker compose to host the application.
 
 ## :busts_in_silhouette: Developer Guide
 
@@ -57,11 +57,11 @@ This dataset aligns well with the project’s goal of building an image-based cl
 - Lint/format: use Visual Studio Code extensions (pylint, Prettier). CI runs Super-Linter on PRs (`.github/workflows/lint.yml`).
 - CI: builds/pushes images on `main` (see `.github/workflows/build-push-images-and-deploy.yml`); model URI provided via repository variables.
 - Deployment: EC2 pulls the GHCR images and runs Docker compose to host the app; the TF Serving model is baked into the image.
-  - For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact. Also update the `MODEL_URI` repository variable on GitHub
+  - For a new model, upload the updated `artifacts/model.tar.gz` to S3 so GitHub Actions can rebuild the TF Serving image with the new artifact. Also, update the `MODEL_URI` repository variable on GitHub
 
 ### Docker files overview
 
-- `docker-compose.yml`: production-style stack; pulls published GHCR images, exposes Flask on host port 80, keeps TF Serving internal. This is being used in aws ec2 instanse to start the application.
+- `docker-compose.yml`: production-style stack; pulls published GHCR images, exposes Flask on host port 80, keeps TF Serving internal. This is being used in AWS EC2 instance to start the application.
 - `docker-compose.local.yml`: local dev stack; builds Flask and uses the official TF Serving image with local `models/tf_serving_ready_model` mounted.
 - `Dockerfile.flask`: builds the Flask API/UI image on Python 3.10, installs `requirements.txt`, copies `src/` and `frontend/`, runs `python -m src.api`.
 - `Dockerfile.tfserving`: builds the TF Serving image by unpacking `model.tar.gz` (downloaded from S3 in CI).
