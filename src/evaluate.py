@@ -1,5 +1,4 @@
-# src/evaluate.py
-
+"""Evaluate a trained Keras model on the test dataset."""
 from pathlib import Path
 from typing import Tuple
 import argparse
