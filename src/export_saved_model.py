@@ -5,8 +5,6 @@ ready for TensorFlow Serving. Labels are hardcoded to match the training order.
 Optionally bundles the export into a versioned tar.gz under ./artifacts.
 """
 
-from __future__ import annotations
-
 import argparse
 import tarfile
 from pathlib import Path
